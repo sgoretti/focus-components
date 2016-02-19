@@ -1,27 +1,29 @@
-import headerActions from './layout/header-actions';
-import headerContent from './layout/header-content';
-import headerDefaultTemplate from './layout/header-default-template';
-import headerScrolling from './layout/header-scrolling';
-import headerTopRow from './layout/header-top-row';
-import input from './input';
-import layout from './layout';
-import menuLeft from './menu';
-import panel from './panel';
-import scrollspyContainer from './scrollspy-container';
 import Confirm from './confirm';
+import HeaderActions from './layout/header-actions';
+import HeaderContent from './layout/header-content';
+import HeaderDefaultTemplate from './layout/header-default-template';
+import HeaderScrolling from './layout/header-scrolling';
+import HeaderTopRow from './layout/header-top-row';
 import IconDropdown from './icon-dropdown';
+import input from './input';
+import Layout from './layout';
+import MenuLeft from './menu';
+import MessageCenter from './message-center';
+import Panel from './panel';
+import ScrollspyContainer from './scrollspy-container';
 
 export default {
-    HeaderActions: headerActions,
-    HeaderContent: headerContent,
     Confirm,
-    HeaderDefaultTemplate: headerDefaultTemplate,
-    HeaderScrolling: headerScrolling,
-    HeaderTopRow: headerTopRow,
+    HeaderActions,
+    HeaderContent,
+    HeaderDefaultTemplate,
+    HeaderScrolling,
+    HeaderTopRow,
+    IconDropdown,
     input,
-    Layout: layout,
-    MenuLeft: menuLeft,
-    Panel: panel,
-    ScrollspyContainer: scrollspyContainer,
-    IconDropdown
+    Layout,
+    MenuLeft,
+    MessageCenter,
+    Panel,
+    ScrollspyContainer
 }
