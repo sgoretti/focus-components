@@ -17,6 +17,14 @@ const propTypes = {
 };
 
 class MessageCenter extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            active: false,
+            message: undefined,
+            messageQueue: []
+        }
+    };
 
     /** @inheriteddoc */
     componentWillMount() {
@@ -33,7 +41,7 @@ class MessageCenter extends Component {
         const message = messageStore.getMessage(messageId);
         const {content, action, type} = message;
         const ttl = this.props[`ttl${capitalize(type)}`];
-        var messageData = {
+        const messageData = {
             message: content,
             timeout: ttl
         };
@@ -41,16 +49,65 @@ class MessageCenter extends Component {
             messageData.actionText = action.text;
             messageData.actionHandler = action.handler;
         }
-        snackbarContainer.MaterialSnackbar.showSnackbar(messageData);
+        this._showSnackbar(messageData);
     };
 
+    _checkQueue = () => {
+        const {messageQueue} = this.state;
+        if (messageQueue.length > 0) {
+            this._showSnackbar(messageQueue.shift());
+        }
+    };
 
+    _clean = () => {
+        this.setState({
+            active: false,
+            message: undefined
+        });
+        this._checkQueue();
+    };
+
+    _cleanup = () => {
+        setTimeout(this.clean, 1000);
+    };
+
+    _displaySnackbar = () => {
+        const {timeout} = this.state;
+        setTimeout(this._cleanup, timeout);
+    };
+
+    _showSnackbar = (data) => {
+        if (data === undefined) {
+            throw new Error ('Please provide a data object with at least a message to display.');
+        }
+        if (data['message'] === undefined) {
+            throw new Error('Please provide a message to be displayed.');
+        }
+        if (data['actionHandler'] && !data['actionText']) {
+            throw new Error('Please provide action text with the handler.');
+        }
+        const {active, messageQueue} = this.state;
+        if (active) {
+            messageQueue.push(data);
+        } else {
+            this.setState({
+                active: true,
+                message: data
+            });
+            this._displaySnackbar();
+        }
+    };
 
     /** @inheritDoc */
     render() {
+        const {active, message, messageQueue} = this.state;
+        const mdlClasses = `focus-snackbar ${active ? '' : 'focus-snackbar--active'}`;
+        console.log(active, message, messageQueue);
         return (
-            <div data-focus='message-center2' className='mdl-js-snackbar mdl-snackbar' aria-live='assertive' aria-atomic='true' aria-relevant='text' ref='snackbarContainer'>
-                <div className='mdl-snackbar__text'></div>
+            <div data-focus='message-center2' className={mdlClasses} aria-live='assertive' aria-atomic='true' aria-relevant='text' ref='snackbarContainer'>
+                {message &&
+                    <div className='mdl-snackbar__text'>{message.message}</div>
+                }
                 <button className='mdl-snackbar__action' type='button'></button>
             </div>
         );
